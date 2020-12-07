@@ -25,7 +25,7 @@ def containing_bag_count(rules, target_counts, target_bag)
       target_counts[b.first] = target_count
       count += target_count
     end
-  
+    
     count
   end
   

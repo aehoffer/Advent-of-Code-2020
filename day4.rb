@@ -30,7 +30,7 @@ valid_passports2 = lambda do |p|
     key = kv[0].to_sym
     val = kv[1]
 	
-	FIELD_VALIDATOR[key]&.call(val)
+    FIELD_VALIDATOR[key]&.call(val)
   end
   
   present_valid_fields.length == FIELD_VALIDATOR.length
