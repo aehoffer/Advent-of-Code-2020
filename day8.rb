@@ -38,9 +38,9 @@ def fixed_program_acc(program)
   
     program[idx][0] = instr[0] == 'jmp' ? 'nop' : 'jmp'
     
-	ip, acc = run_program(program)
+    ip, acc = run_program(program)
     return acc if ip >= program.size
-	
+    
 	program[idx][0] = instr[0] == 'jmp' ? 'nop' : 'jmp'
   end
   
