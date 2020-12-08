@@ -5,7 +5,7 @@ def run_program(program)
   acc = 0
   seen = Array.new(program.size) { |i| 0 }
   
-  while ((0...program.size).include?(ip))
+  while (0...program.size).include?(ip)
     instr = program[ip][0]
     val = program[ip][1].to_i
 
