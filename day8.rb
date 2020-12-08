@@ -41,7 +41,7 @@ def fixed_program_acc(program)
     ip, acc = run_program(program)
     return acc if ip >= program.size
     
-	program[idx][0] = instr[0] == 'jmp' ? 'nop' : 'jmp'
+    program[idx][0] = instr[0] == 'jmp' ? 'nop' : 'jmp'
   end
   
   "unfixable"
