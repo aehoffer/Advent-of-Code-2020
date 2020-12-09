@@ -15,16 +15,14 @@ end
 puts "#{ test_num }"
 
 # Part 2
-candidates = NUMBERS[0...test_num_idx]
-contiguous_numbers = nil
-
 # Brute force for looking for contiguous sum of test number.. Is there a better way?
-catch :Done do
+def contiguous_sum(candidates, target)
   (2...candidates.size).each do |len|
-    (0...candidates.size).each do |i|
-      contiguous_numbers = candidates[i...i + len]
-      throw :Done if contiguous_numbers.sum == test_num
-    end
+    candidates.each_cons(len) { |cons| return cons if cons.sum == target }
   end
+  
+  nil
 end
+
+contiguous_numbers = contiguous_sum(NUMBERS[0...test_num_idx], test_num)
 puts "#{ contiguous_numbers.min + contiguous_numbers.max }"
