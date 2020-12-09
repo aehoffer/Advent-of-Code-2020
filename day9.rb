@@ -10,7 +10,7 @@ step = 25
   test_num = NUMBERS[i]
   
   candidates = NUMBERS[i - step...i]
-  break if candidates.product(candidates).reject { |pair| pair[0] == pair[1] }.find { |pair| pair.sum == test_num } == nil
+  break if candidates.combination(2).find { |pair| pair.sum == test_num } == nil
 end
 puts "#{ test_num }"
 
