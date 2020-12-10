@@ -29,6 +29,7 @@ end
 def contiguous_sum_smart(candidates, target)  
   # Prefix sums (i, j) = (offset, size - 1) 
   offset, size = 0, 0
+  
   catch :Done do
     sum = 0
     (0...candidates.size).each do |i|
@@ -45,6 +46,34 @@ def contiguous_sum_smart(candidates, target)
   
   candidates[offset...offset + size]
 end
+
+# Simplest, smartest approach: Since numbes are positive and generally increasing, add next candidate
+# if less than target, otherwise subtract first candidate in current target.
+def contiguous_sum_smartest(candidates, target)  
+  tail, head = 0
+  sum = candidates[0]
+  
+  while tail <= head && tail < candidates.length do
+    break if sum == target
+  
+    if head == candidates.size
+      tail += 1
+	  sum -= candidates[tail]
+    elsif sum < target
+	  head += 1
+	  sum += candidates[head]
+	elsif sum > target
+	  tail += 1
+	  sum -= candidates[tail]
+	end
+  end
+  
+  candidates[tail...head]
+end
+
+# contiguous_numbers = contiguous_sum_smart([1, 2, 3, 4, 5], 9)
+# puts "#{ contiguous_numbers }"
+# puts "#{ contiguous_numbers.min + contiguous_numbers.max }" unless contiguous_numbers.empty?
 
 contiguous_numbers = contiguous_sum_smart(NUMBERS[0...test_num_idx], test_num)
 puts "#{ contiguous_numbers.min + contiguous_numbers.max }" unless contiguous_numbers.empty?
