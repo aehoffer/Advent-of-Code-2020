@@ -50,14 +50,15 @@ end
 # Simplest, smartest approach: Since numbes are positive and generally increasing, add next candidate
 # if less than target, otherwise subtract first candidate in current target.
 def contiguous_sum_smartest(candidates, target)  
-  tail, head = 0
+  tail, head = 0, 0
   sum = candidates[0]
   
   while tail <= head && tail < candidates.length do
     break if sum == target
   
-    if head == candidates.size
+    if head == candidates.size - 1
 	  sum -= candidates[tail]
+	  break if sum < target
       tail += 1
     elsif sum < target
 	  head += 1
@@ -68,8 +69,8 @@ def contiguous_sum_smartest(candidates, target)
 	end
   end
   
-  candidates[tail...head]
+  sum == target ? candidates[tail..head] : []
 end
 
-contiguous_numbers = contiguous_sum_smart(NUMBERS[0...test_num_idx], test_num)
+contiguous_numbers = contiguous_sum_smartest(NUMBERS[0...test_num_idx], test_num)
 puts "#{ contiguous_numbers.min + contiguous_numbers.max }" unless contiguous_numbers.empty?
