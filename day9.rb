@@ -21,7 +21,7 @@ def contiguous_sum(candidates, target)
     candidates.each_cons(len) { |cons| return cons if cons.sum == target }
   end
   
-  nil
+  []
 end
 
 # Dynamic programming approach. Use all prefix sums of candidates(0...candidates.size)
