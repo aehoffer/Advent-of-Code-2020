@@ -57,23 +57,19 @@ def contiguous_sum_smartest(candidates, target)
     break if sum == target
   
     if head == candidates.size
-      tail += 1
 	  sum -= candidates[tail]
+      tail += 1
     elsif sum < target
 	  head += 1
 	  sum += candidates[head]
 	elsif sum > target
-	  tail += 1
 	  sum -= candidates[tail]
+	  tail += 1
 	end
   end
   
   candidates[tail...head]
 end
-
-# contiguous_numbers = contiguous_sum_smart([1, 2, 3, 4, 5], 9)
-# puts "#{ contiguous_numbers }"
-# puts "#{ contiguous_numbers.min + contiguous_numbers.max }" unless contiguous_numbers.empty?
 
 contiguous_numbers = contiguous_sum_smart(NUMBERS[0...test_num_idx], test_num)
 puts "#{ contiguous_numbers.min + contiguous_numbers.max }" unless contiguous_numbers.empty?
