@@ -28,15 +28,14 @@ end
 # to compute arbitrary contiguous size in O(n^2) time until we find the target.
 def contiguous_sum_smart(candidates, target)  
   # Prefix sums (i, j) = (offset, size - 1) 
-  sums = []
   offset, size = 0, 0
-  
   catch :Done do
+    sum = 0
     (0...candidates.size).each do |i|
-      sums << [candidates[i]]
+      sum = candidates[i]
       (i + 1...candidates.size).each do |j| 
-        sums[i] << sums[i][j - i - 1] + candidates[j]
-        if sums[i][j - i] == target
+        sum += candidates[j]
+        if sum == target
           offset, size = i, j - i + 1
           throw :Done
         end
