@@ -31,7 +31,7 @@ def total_adapter_lens(adapters)
   adapter_len = lambda do |a, idx|
     return adapter_cache[a] unless adapter_cache[a].nil?
     
-    next_adapters_indices = (idx + 1...adapters.size).select { |i|  adapters[i].between?(a + 1, a + 3) }.take(3)
+    next_adapters_indices = (idx + 1...adapters.size).select { |i| adapters[i].between?(a + 1, a + 3) }.take(3)
     return adapter_cache[a] = 1 if next_adapters_indices.empty?
 
     adapter_cache[a] = next_adapters_indices.map { |i| adapter_len.call(adapters[i], i) }.sum
