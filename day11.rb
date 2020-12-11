@@ -103,7 +103,6 @@ line_of_sight_surroundings = lambda do |x, y, states, cache|
     [ [-1, -1], [0, -1], [1, -1],  
       [-1,  0],          [1,  0],
       [-1,  1], [0,  1], [1,  1],
-    ].map { |dir| line_of_sight.call([x, y], dir).reject { |p| p.empty? } }
-     .flatten(1)
+    ].map { |dir| line_of_sight.call([x, y], dir) }.flatten(1)
 end
 puts "#{ seats_occupied_when_finished(INITIAL_SEAT_STATES, line_of_sight_surroundings, 5) }"
