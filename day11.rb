@@ -19,7 +19,7 @@ def seats_occupied_beginning_cycle(seat_states)
        [x - 1, y]    ,             [x + 1, y]    ,  
        [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
     ].select do |pos|  
-	  pos[0] >= 0 && pos[0] < row_size &&  
+      pos[0] >= 0 && pos[0] < row_size &&  
       pos[1] >= 0 && pos[1] < column_size  
     end  
   end
@@ -29,38 +29,38 @@ def seats_occupied_beginning_cycle(seat_states)
     
   loop do  
     new_state = old_state.clone.map(&:clone)
-	new_seats_occupied = 0
+    new_seats_occupied = 0
     new_seats_empty = 0
-	
-	#print_states(new_state)
-		  
+    
+    #print_states(new_state)
+      
     old_state.each_with_index do |r, i|  
-	  r.each_with_index do |c, j|  
-		surroundings = neighbours.call(i, j)
+      r.each_with_index do |c, j|  
+        surroundings = neighbours.call(i, j)
         #puts "(c, i, j): (#{c}, #{i}, #{j}),  #{surroundings}"
-		
+    
         seats = surroundings.map{ |x, y| old_state[x][y] }.select { |c| ['L', '#'].include?(c) }  
-		empty_seats = seats.select { |s| s == 'L' }.size
-		occupied_seats = seats.select { |s| s == '#' }.size
+        empty_seats = seats.select { |s| s == 'L' }.size
+        occupied_seats = seats.select { |s| s == '#' }.size
   
-		case c  
-		when 'L'
-		  if seats.size == empty_seats
-		    new_state[i][j] = '#' 
-		    new_seats_occupied += 1
-		  end
-		when '#'
-		  if occupied_seats >= 4
-		    new_state[i][j] = 'L' 
-		    new_seats_empty += 1
-		  end
-		end  
-	  end  
-	end  
-	
-	break if new_seats_occupied + new_seats_empty == 0
-	
-	old_state = new_state.clone.map(&:clone)
+        case c  
+        when 'L'
+          if seats.size == empty_seats
+            new_state[i][j] = '#' 
+            new_seats_occupied += 1
+          end
+        when '#'
+          if occupied_seats >= 4
+            new_state[i][j] = 'L' 
+            new_seats_empty += 1
+          end
+        end  
+      end  
+    end  
+  
+    break if new_seats_occupied + new_seats_empty == 0
+  
+    old_state = new_state.clone.map(&:clone)
   end
 
   new_state.flatten.select { |c| c == '#' }.size
