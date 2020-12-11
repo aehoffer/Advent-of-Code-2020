@@ -1,4 +1,4 @@
-INTIAL_SEAT_STATES = File.readlines("day11_input.txt").map { |line| line.chomp.chars }  
+INITIAL_SEAT_STATES = File.readlines("day11_input.txt").map { |line| line.chomp.chars }  
 
 def print_states(states)
   states.each { |r| puts "#{ r.join('') }" } 
@@ -72,7 +72,7 @@ nearest_surroundings = lambda do |x, y, states, cache|
        [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
     ].select { |pos| between_boundary?(pos[0], pos[1], r, c) && states[pos[0]][pos[1]] != '.' }  
 end  
-puts "#{ seats_occupied_when_finished(INTIAL_SEAT_STATES, nearest_surroundings, 4) }"
+puts "#{ seats_occupied_when_finished(INITIAL_SEAT_STATES, nearest_surroundings, 4) }"
 
 # Part 2
 line_of_sight_surroundings = lambda do |x, y, states, cache|
@@ -106,4 +106,4 @@ line_of_sight_surroundings = lambda do |x, y, states, cache|
     ].map { |dir| line_of_sight.call([x, y], dir).reject { |p| p.empty? } }
      .flatten(1)
 end
-puts "#{ seats_occupied_when_finished(INTIAL_SEAT_STATES, line_of_sight_surroundings, 5) }"
+puts "#{ seats_occupied_when_finished(INITIAL_SEAT_STATES, line_of_sight_surroundings, 5) }"
