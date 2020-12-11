@@ -86,8 +86,8 @@ line_of_sight_surroundings = lambda do |x, y, states|
       break unless between_boundary?(x_pos, y_pos, r, c) && states[x_pos][y_pos] == '.'
     end
   
-  # puts "(x, y): (#{x}, #{y}), surroundings: #{los_cells}"
-  los_cells
+    # puts "(x, y): (#{x}, #{y}), surroundings: #{los_cells}"
+    los_cells
   end
   
   [ [-1, -1], [0, -1], [1, -1],  
