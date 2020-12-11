@@ -16,6 +16,8 @@ def seats_occupied_when_finished(seat_states, surroundings_rule, seat_occupied_t
 
   old_state = seat_states.clone.map(&:clone)
   new_state = nil
+  
+  visibility_cache = {}
     
   loop do  
     new_state = old_state.clone.map(&:clone)
@@ -25,10 +27,12 @@ def seats_occupied_when_finished(seat_states, surroundings_rule, seat_occupied_t
     #print_states(new_state)
     old_state.each_with_index do |r, i|  
       r.each_with_index do |c, j|  
-        surroundings = surroundings_rule.call(i, j, old_state)
+	    next if c == '.'
+	  
+        surroundings = surroundings_rule.call(i, j, old_state, visibility_cache)
         #puts "(c, i, j): (#{c}, #{i}, #{j}),  #{surroundings}"
     
-        seats = surroundings.map{ |x, y| old_state[x][y] }.select { |c| ['L', '#'].include?(c) }  
+        seats = surroundings.map{ |x, y| old_state[x][y] }
         empty_seats = seats.select { |s| s == 'L' }.size
         occupied_seats = seats.select { |s| s == '#' }.size
   
@@ -56,21 +60,26 @@ def seats_occupied_when_finished(seat_states, surroundings_rule, seat_occupied_t
 end
 
 # Part 1
-nearest_surroundings = lambda do |x, y, states|
+nearest_surroundings = lambda do |x, y, states, cache|
+  return cache[[x, y]] unless cache[[x, y]].nil?
+  
   r = states.length  
   c = states.first.length
   
-  [  [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],  
-     [x - 1, y]    ,             [x + 1, y]    ,  
-     [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
-  ].select { |pos| between_boundary?(pos[0], pos[1], r, c) }  
+  cache[[x, y]] =
+    [  [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],  
+       [x - 1, y]    ,             [x + 1, y]    ,  
+       [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
+    ].select { |pos| between_boundary?(pos[0], pos[1], r, c) && states[pos[0]][pos[1]] != '.' }  
 end  
 puts "#{ seats_occupied_when_finished(INTIAL_SEAT_STATES, nearest_surroundings, 4) }"
 
 # Part 2
-line_of_sight_surroundings = lambda do |x, y, states|
+line_of_sight_surroundings = lambda do |x, y, states, cache|
+  return cache[[x, y]] unless cache[[x, y]].nil?
+  
   line_of_sight = lambda do |orig, dir|
-    r = states.length  
+	r = states.length  
     c = states.first.length
   
     los_cells = []
@@ -81,7 +90,7 @@ line_of_sight_surroundings = lambda do |x, y, states|
       x_pos += dir[0]
       y_pos += dir[1]
     
-      los_cells << [x_pos, y_pos] if between_boundary?(x_pos, y_pos, r, c)
+      los_cells << [x_pos, y_pos] if between_boundary?(x_pos, y_pos, r, c) && states[x_pos][y_pos] != '.'
               
       break unless between_boundary?(x_pos, y_pos, r, c) && states[x_pos][y_pos] == '.'
     end
@@ -90,10 +99,11 @@ line_of_sight_surroundings = lambda do |x, y, states|
     los_cells
   end
   
-  [ [-1, -1], [0, -1], [1, -1],  
-    [-1,  0],          [1,  0],
-    [-1,  1], [0,  1], [1,  1],
-  ].map { |dir| line_of_sight.call([x, y], dir).reject { |p| p.empty? } }
-   .flatten(1)
+  return cache[[x, y]] =
+    [ [-1, -1], [0, -1], [1, -1],  
+      [-1,  0],          [1,  0],
+      [-1,  1], [0,  1], [1,  1],
+    ].map { |dir| line_of_sight.call([x, y], dir).reject { |p| p.empty? } }
+     .flatten(1)
 end
 puts "#{ seats_occupied_when_finished(INTIAL_SEAT_STATES, line_of_sight_surroundings, 5) }"
