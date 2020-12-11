@@ -18,7 +18,7 @@ nearest_surroundings = lambda do |x, y, r, c|
   end  
 end
   
-def seats_occupied_beginning_cycle(seat_states, surrounding_rule, seat_occupied_threshold)
+def seats_occupied_beginning_cycle(seat_states, seat_rule, seat_occupied_threshold)
   row_size = seat_states.length  
   column_size = seat_states.first.length
   #puts "(r, c): (#{row_size}, #{column_size})"  
@@ -35,7 +35,7 @@ def seats_occupied_beginning_cycle(seat_states, surrounding_rule, seat_occupied_
       
     old_state.each_with_index do |r, i|  
       r.each_with_index do |c, j|  
-        surroundings = surrounding_rule.call(i, j, row_size, column_size)
+        surroundings = seat_rule.call(i, j, row_size, column_size)
         #puts "(c, i, j): (#{c}, #{i}, #{j}),  #{surroundings}"
     
         seats = surroundings.map{ |x, y| old_state[x][y] }.select { |c| ['L', '#'].include?(c) }  
