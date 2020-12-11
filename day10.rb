@@ -12,9 +12,9 @@ loop do
   
   (idx...adapters.size).each do |i|
     if adapters[i].between?(jolts, jolts + 3)
-	   idx = i
-	   break
-	end
+      idx = i
+      break
+    end
   end
   
   differences[adapters[idx] - jolts].append(adapters[idx])
@@ -31,13 +31,12 @@ def total_adapter_lens(adapters)
   adapter_len = lambda do |a, idx|
     return adapter_cache[a] unless adapter_cache[a].nil?
     
-	next_adapters_indices = (idx + 1...adapters.size).select { |i| a < adapters[i] && adapters[i] <= a + 3 }.take(3)
-	return adapter_cache[a] = 1 if next_adapters_indices.empty?
-	
-	adapter_cache[a] = next_adapters_indices.map { |i| adapter_len.call(adapters[i], i) }.sum
+    next_adapters_indices = (idx + 1...adapters.size).select { |i| a < adapters[i] && adapters[i] <= a + 3 }.take(3)
+    return adapter_cache[a] = 1 if next_adapters_indices.empty?
+
+    adapter_cache[a] = next_adapters_indices.map { |i| adapter_len.call(adapters[i], i) }.sum
   end
   
   adapter_len.call(adapters[0], 0)
 end
-
 puts "#{total_adapter_lens(adapters)}"
