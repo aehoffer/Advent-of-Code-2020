@@ -7,22 +7,21 @@ def print_states(states)
   states.each { |r| puts "#{ r.join('') }" } 
   puts ""
 end
+
+nearest_surroundings = lambda do |x, y, r, c|  
+  [  [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],  
+     [x - 1, y]    ,             [x + 1, y]    ,  
+     [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
+  ].select do |pos|  
+    pos[0] >= 0 && pos[0] < r &&  
+    pos[1] >= 0 && pos[1] < c
+  end  
+end
   
-def seats_occupied_beginning_cycle(seat_states)  
+def seats_occupied_beginning_cycle(seat_states, surrounding_rule, seat_occupied_threshold)
   row_size = seat_states.length  
   column_size = seat_states.first.length
-
   #puts "(r, c): (#{row_size}, #{column_size})"  
-    
-  neighbours = lambda do |x, y|  
-    [  [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],  
-       [x - 1, y]    ,             [x + 1, y]    ,  
-       [x - 1, y + 1], [x, y + 1], [x + 1, y + 1]  
-    ].select do |pos|  
-      pos[0] >= 0 && pos[0] < row_size &&  
-      pos[1] >= 0 && pos[1] < column_size  
-    end  
-  end
 
   old_state = seat_states.clone.map(&:clone)
   new_state = nil
@@ -36,7 +35,7 @@ def seats_occupied_beginning_cycle(seat_states)
       
     old_state.each_with_index do |r, i|  
       r.each_with_index do |c, j|  
-        surroundings = neighbours.call(i, j)
+        surroundings = surrounding_rule.call(i, j, row_size, column_size)
         #puts "(c, i, j): (#{c}, #{i}, #{j}),  #{surroundings}"
     
         seats = surroundings.map{ |x, y| old_state[x][y] }.select { |c| ['L', '#'].include?(c) }  
@@ -50,7 +49,7 @@ def seats_occupied_beginning_cycle(seat_states)
             new_seats_occupied += 1
           end
         when '#'
-          if occupied_seats >= 4
+          if occupied_seats >= seat_occupied_threshold
             new_state[i][j] = 'L' 
             new_seats_empty += 1
           end
@@ -66,4 +65,4 @@ def seats_occupied_beginning_cycle(seat_states)
   new_state.flatten.select { |c| c == '#' }.size
 end  
   
-puts "#{ seats_occupied_beginning_cycle(INTIAL_SEAT_STATES) }"
+puts "#{ seats_occupied_beginning_cycle(INTIAL_SEAT_STATES, nearest_surroundings, 4) }"
