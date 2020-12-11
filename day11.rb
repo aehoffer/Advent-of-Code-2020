@@ -49,7 +49,7 @@ def seats_occupied_when_finished(seat_states, surroundings_rule, seat_occupied_t
   
     break if new_seats_occupied + new_seats_empty == 0
   
-    old_state = new_state.clone.map(&:clone)
+    old_state = new_state
   end
 
   new_state.flatten.select { |c| c == '#' }.size
