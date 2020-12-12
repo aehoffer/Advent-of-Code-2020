@@ -18,7 +18,7 @@ def move_ship1(ship, instructions)
     when 'F'
       case ship[:degrees]
       # Note: normally would do Math.cos/sin(degrees * Math.PI / 180) for x / y normally,
-      #       but easier this way since no need to deal with floats here, All
+      #       but easier this way since no need to deal with floats here, as all
       #       angles are given as integral multiples of 180 degrees.
       when 0
         # E
