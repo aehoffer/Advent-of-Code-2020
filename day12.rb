@@ -13,7 +13,7 @@ def move_ship1(ship, instructions)
     when 'S'
       ship[:pos][:y] -= instr[1]
     when 'L', 'R'
-      sign = sign = instr[0] == 'L' ? 1 : -1
+      sign = instr[0] == 'L' ? 1 : -1
       ship[:degrees] = (ship[:degrees] + sign * instr[1]) % 360
     when 'F'
       case ship[:degrees]
