@@ -6,7 +6,7 @@ def move_ship(ship, instructions, mover)
   instructions.each do |instr|
     case instr[0]
     when /[ENWS]/
-      wp_add = case instr[0]
+      mover_add = case instr[0]
       when 'E'
         instr[1]
       when 'N'
@@ -17,7 +17,7 @@ def move_ship(ship, instructions, mover)
         -instr[1]*i
       end
     
-      ship[mover] += wp_add
+      ship[mover] += mover_add
     when 'F'
       ship[:pos] += ship[:wp] * instr[1]
     when /[LR]/
