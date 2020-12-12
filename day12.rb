@@ -4,26 +4,26 @@ def move_ship(ship, instructions)
   instructions.each do |instr|
     case instr[0]
     when /[ENWS]/
-	  pos_add = case instr[0]
-	  when 'E'
-	    Complex(instr[1], 0)
-	  when 'N'
-	    Complex(0, instr[1])
-	  when 'W'
-	    Complex(-instr[1], 0)
-	  when 'S'
-	    Complex(0, -instr[1])
-	  end
-	  
-	  ship[:pos] += pos_add
-	when 'F'
+    pos_add = case instr[0]
+      when 'E'
+        Complex(instr[1], 0)
+      when 'N'
+        Complex(0, instr[1])
+      when 'W'
+        Complex(-instr[1], 0)
+      when 'S'
+        Complex(0, -instr[1])
+      end
+    
+    ship[:pos] += pos_add
+    when 'F'
       ship[:pos] += ship[:wp] * instr[1]
     when 'L', 'R'
-	  sign = instr[0] == 'L' ? 1 : -1
+      sign = instr[0] == 'L' ? 1 : -1
       degrees = (sign * instr[1]) % 360
       wp_dir = Complex::polar(1, Math::PI * degrees / 180)
-	  
-	  ship[:wp] *= wp_dir 
+    
+      ship[:wp] *= wp_dir 
   end
 end
 
