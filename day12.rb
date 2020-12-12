@@ -12,7 +12,7 @@ def move_ship1(ship, instructions)
       ship[:pos][:x] -= instr[1]
     when 'S'
       ship[:pos][:y] -= instr[1]
-    when /[LR]/
+    when 'L', 'R'
       sign = sign = instr[0] == 'L' ? 1 : -1
       ship[:degrees] = (ship[:degrees] + sign * instr[1]) % 360
     when 'F'
@@ -55,7 +55,7 @@ def move_ship2(ship, waypoint, instructions)
       waypoint[:pos][:x] -= instr[1]
     when 'S'
       waypoint[:pos][:y] -= instr[1]
-    when /[LR]/
+    when 'L', 'R'
       # Rotate waypoint around the ship to do stuff.
       # Co-ordinates are given relative to ship, so just directly 
       # multiply with imaginary units or -1 as required.
