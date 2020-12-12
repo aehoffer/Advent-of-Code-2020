@@ -1,6 +1,6 @@
 INSTRUCTIONS = File.readlines("day12_input.txt").map { |line| [line[0], line.chomp[1..].to_i] }
 
-def move_ship(ship, instructions, move_sym)
+def move_ship(ship, instructions, mover)
   i = Complex::I
 
   instructions.each do |instr|
@@ -17,7 +17,7 @@ def move_ship(ship, instructions, move_sym)
         -instr[1]*i
       end
     
-      ship[move_sym] += wp_add
+      ship[mover] += wp_add
     when 'F'
       ship[:pos] += ship[:wp] * instr[1]
     when /[LR]/
