@@ -19,7 +19,7 @@ def move_ship(ship, instructions, mover)
 
       ship[mover] += mover_add
     when 'F'
-      ship[:pos] += ship[:wp] * instr[1]
+      ship[:pos] += instr[1] * ship[:wp]
     when /[LR]/
       sign = instr[0] == 'L' ? 1 : -1
       degrees = (sign * instr[1]) % 360
