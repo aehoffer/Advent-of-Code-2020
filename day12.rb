@@ -16,7 +16,7 @@ def move_ship(ship, instructions, mover)
       when 'S'
         -instr[1]*i
       end
-    
+
       ship[mover] += mover_add
     when 'F'
       ship[:pos] += ship[:wp] * instr[1]
@@ -24,8 +24,8 @@ def move_ship(ship, instructions, mover)
       sign = instr[0] == 'L' ? 1 : -1
       degrees = (sign * instr[1]) % 360
       wp_dir = Complex::polar(1, Math::PI * degrees / 180)
-    
-      ship[:wp] *= wp_dir 
+
+      ship[:wp] *= wp_dir
     end
   end
 end
