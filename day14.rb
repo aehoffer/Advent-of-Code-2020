@@ -8,12 +8,12 @@ def run(instructions, version = 1)
     # Fetch, Decode, & Execute goodness again. :)
     case instr[0]
     when /mem/
+      addr = instr[0][4..-2].to_i
+      val = instr[1].to_i
+
       case version
       when 1
-        addr = instr[0][4..-2].to_i
-        value = instr[1].to_i
-
-        mem[addr] = value
+        mem[addr] = val
         mask[:frozen_bits].each do |pos, bit|
           if bit.zero?
             mem[addr] &= ~(1 << pos)
@@ -23,8 +23,12 @@ def run(instructions, version = 1)
         end
       when 2
         # TODO: Part 2
-      end
 
+        # Step 1: Apply raw mask to address. Get new address, record floating mask offsets.
+        # Step 2: For all repeated permutations, flip the bits appropriately for each X
+        #         as part of the masked address, and store each new address obtained.
+        # Step 3: Write out the value to each address obtained.
+      end
     when /mask/
       mask[:frozen_bits] = {}
 
