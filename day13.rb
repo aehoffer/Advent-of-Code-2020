@@ -12,7 +12,9 @@ puts min_bus_arrival[0] * (min_bus_arrival[1] - depart_time)
 
 # Part 2, mainly taken from rosettacode.org for calculating timestep via
 # Chinese Remainder Theorem. Mainly lazyness overtook me from coming up
-# with trying to re-invent how to solve it from scratch.
+# with trying to re-invent how to solve it from scratch, so credit to
+# here: https://rosettacode.org/wiki/Chinese_remainder_theorem, just formatted
+# a bit differently.
 def extended_gcd(a, b)
   last_remainder = a.abs
   remainder = b.abs
