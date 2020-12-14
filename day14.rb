@@ -1,7 +1,7 @@
 INSTRUCTIONS = File.readlines('day14_input.txt').map { |line| line.chomp.split(' = ') }
 
 def run(instructions, version = 1)
-  mask = { raw: '', frozen_bits: {} }
+  mask = { raw: '', off: 0, on: 0, masked_addr: 0 }
   mem = {}
 
   instructions.each do |instr|
@@ -13,14 +13,7 @@ def run(instructions, version = 1)
 
       case version
       when 1
-        mem[addr] = val
-        mask[:frozen_bits].each do |pos, bit|
-          if bit.zero?
-            mem[addr] &= ~(1 << pos)
-          else
-            mem[addr] |=  (1 << pos)
-          end
-        end
+        mem[addr] = (val | mask[:on]) & ~mask[:off]
       when 2
         # TODO: Part 2
 
@@ -30,13 +23,14 @@ def run(instructions, version = 1)
         # Step 3: Write out the value to each address obtained.
       end
     when /mask/
-      mask[:frozen_bits] = {}
-
       mask[:raw] = instr[1]
+      mask[:off] = 0
+      mask[:on] = 0
+
       mask[:raw].chars.reverse.each_with_index do |bit, idx|
         next if bit == 'X'
 
-        mask[:frozen_bits][idx] = bit.to_i
+        mask[bit == '0' ? :off : :on] |= (1 << idx)
       end
     end
   end
