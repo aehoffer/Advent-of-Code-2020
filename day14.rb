@@ -1,7 +1,7 @@
 INSTRUCTIONS = File.readlines('day14_input.txt').map { |line| line.chomp.split(' = ') }
 
 def run(instructions, version = 1)
-  mask = { raw: '', off: 0, on: 0, masked_addr: 0 }
+  mask = { raw: '', off: 0, on: 0, addr: '', floating_indexes: [] }
   mem = {}
 
   instructions.each do |instr|
@@ -15,19 +15,32 @@ def run(instructions, version = 1)
       when 1
         mem[addr] = (val | mask[:on]) & ~mask[:off]
       when 2
-        # TODO: Part 2
+        addr_full = addr.to_s(2).rjust(mask[:raw].size, '0').reverse
+        mask[:addr] = mask[:raw]
+                      .chars.each_with_index
+                      .map { |b, i| b == '0' ? addr_full[i] : mask[:raw][i] }
+                      .join
+        mask[:floating_indexes] = mask[:addr]
+                                  .chars.each_with_index
+                                  .select { |b, _| b == 'X' }
+                                  .map { |p| p[1] }
 
-        # Step 1: Apply raw mask to address. Get new address, record floating mask offsets.
-        # Step 2: For all repeated permutations, flip the bits appropriately for each X
-        #         as part of the masked address, and store each new address obtained.
-        # Step 3: Write out the value to each address obtained.
+        %w[0 1].repeated_permutation(mask[:floating_indexes].size).each do |vals|
+          derived_addr = mask[:addr]
+
+          mask[:floating_indexes].zip(vals).each do |p|
+            derived_addr[p.first] = p[1]
+          end
+
+          mem[derived_addr.reverse.to_i(2)] = val
+        end
       end
     when /mask/
-      mask[:raw] = instr[1]
+      mask[:raw] = instr[1].reverse
       mask[:off] = 0
       mask[:on] = 0
 
-      mask[:raw].chars.reverse.each_with_index do |bit, idx|
+      mask[:raw].chars.each_with_index do |bit, idx|
         next if bit == 'X'
 
         mask[bit == '0' ? :off : :on] |= (1 << idx)
@@ -39,7 +52,7 @@ def run(instructions, version = 1)
 end
 
 # Part 1
-puts run(INSTRUCTIONS)
+puts run(INSTRUCTIONS, 1)
 
 # Part 2
-# puts run(INSTRUCTIONS, version = 2)
+puts run(INSTRUCTIONS, 2)
