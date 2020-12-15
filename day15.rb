@@ -2,7 +2,12 @@ NUMBERS = File.readlines('day15_input.txt')[0].chomp.split(',').map(&:to_i).unsh
 
 def memory_game(numbers, stop)
   number_turns_spoken = {}
-  numbers.each_with_index { |n, i| number_turns_spoken[n] = [i] if i.positive? }
+  numbers.each_with_index { |n, i| number_turns_spoken[n] = { last_two: [i], count: 1 } if i.positive? }
+
+  tail_head_indexes = lambda do |n|
+    [(number_turns_spoken[n][:count] - 2) % 2,
+     (number_turns_spoken[n][:count] - 1) % 2]
+  end
 
   curr_turn = numbers.size
   while curr_turn <= stop
@@ -11,17 +16,30 @@ def memory_game(numbers, stop)
     spoken = 0
 
     if number_turns_spoken[last_number].nil?
-      number_turns_spoken[last_number] = [last_turn]
+      number_turns_spoken[last_number] = { last_two: [last_turn], count: 1 }
     else
-      spoken = if number_turns_spoken[last_number].size == 1
-                 last_turn - number_turns_spoken[last_number][-1]
-               else
-                 number_turns_spoken[last_number][-1] - number_turns_spoken[last_number][-2]
-               end
-      if number_turns_spoken[spoken].nil?
-        number_turns_spoken[spoken] = [curr_turn]
+      if number_turns_spoken[last_number][:count] == 1
+        spoken = last_turn - number_turns_spoken[last_number][:last_two][0]
       else
-        number_turns_spoken[spoken] << curr_turn
+        (tail, head) = tail_head_indexes.call(last_number)
+
+        spoken = number_turns_spoken[last_number][:last_two][head] - number_turns_spoken[last_number][:last_two][tail]
+      end
+      number_turns_spoken[last_number][:count] += 1
+
+      if number_turns_spoken[spoken].nil?
+        number_turns_spoken[spoken] = { last_two: [curr_turn], count: 1 }
+      elsif number_turns_spoken[spoken][:count] == 1
+        number_turns_spoken[spoken][:last_two][1] = curr_turn
+
+        number_turns_spoken[spoken][:count] = 2
+      else
+        (tail, head) = tail_head_indexes.call(spoken)
+
+        number_turns_spoken[spoken][:last_two][head] = number_turns_spoken[spoken][:last_two][tail]
+        number_turns_spoken[spoken][:last_two][tail] = curr_turn
+
+        number_turns_spoken[spoken][:count] += 1
       end
     end
 
