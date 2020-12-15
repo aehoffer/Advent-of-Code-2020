@@ -23,13 +23,13 @@ def run(instructions, version = 1)
         mask[:floating_indexes] = mask[:addr]
                                   .chars.each_with_index
                                   .select { |b, _| b == 'X' }
-                                  .map { |p| p[1] }
+                                  .map { |_, i| i }
 
         %w[0 1].repeated_permutation(mask[:floating_indexes].size).each do |vals|
           derived_addr = mask[:addr]
 
-          mask[:floating_indexes].zip(vals).each do |p|
-            derived_addr[p.first] = p[1]
+          mask[:floating_indexes].zip(vals).each do |i, b|
+            derived_addr[i] = b
           end
 
           mem[derived_addr.reverse.to_i(2)] = val
