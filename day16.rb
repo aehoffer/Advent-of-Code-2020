@@ -33,7 +33,6 @@ puts error_rates.sum
 
 # Part 2
 ticket_field_values = (nearby_tickets - invalid_tickets).transpose
-ticket_field_minmax = ticket_field_values.map(&:minmax)
 
 candidate_ticket_fields = ticket_field_values.each_with_index.map do |fv, i|
   [ticket_rules.keys.select { |r| fv.to_set <= ticket_rules[r].reduce(:+) }, i]
@@ -41,7 +40,20 @@ end
 
 candidate_ticket_fields.sort! { |c1, c2| c1[0].size <=> c2[0].size }
 
-puts candidate_ticket_fields.to_s
+field_positions = {}
+candidate_ticket_fields.each do |fields, index|
+  possible_fields = fields.reject { |f| field_positions.keys.include?(f) }
+  if possible_fields.size == 1
+    field_positions[possible_fields.first] = index
+  else
+    # General case: Magic with comparing fields subsets, picking smallest one?
+    # Not needed for my puzzle input though. Would otherwise need some kind of
+    # constraint satisfaction search to make this work.
+  end
+end
 
-# field_positions = {}
-# candidate_ticket_fields.do
+departure_values = field_positions.select { |r, _| r.to_s['departure'] }
+                                  .values
+                                  .map { |i| my_ticket[i] }.reduce(:*)
+
+puts departure_values
