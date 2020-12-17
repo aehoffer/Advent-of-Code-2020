@@ -38,7 +38,7 @@ candidate_ticket_fields = ticket_field_values.each_with_index.map do |fv, i|
   [ticket_rules.keys.select { |r| fv.to_set <= ticket_rules[r].reduce(:+) }, i]
 end
 
-candidate_ticket_fields.sort! { |c1, c2| c1[0].size <=> c2[0].size }
+candidate_ticket_fields.sort! { |c1, c2| c1.first.size <=> c2.first.size }
 
 field_positions = {}
 candidate_ticket_fields.each do |fields, index|
@@ -52,9 +52,9 @@ candidate_ticket_fields.each do |fields, index|
   end
 end
 
-departure_values = field_positions.select { |r, _| r.to_s['departure'] }
+departures_value = field_positions.select { |r, _| r.to_s['departure'] }
                                   .values
                                   .map { |i| my_ticket[i] }
                                   .reduce(:*)
 
-puts departure_values
+puts departures_value
