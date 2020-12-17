@@ -54,6 +54,7 @@ end
 
 departure_values = field_positions.select { |r, _| r.to_s['departure'] }
                                   .values
-                                  .map { |i| my_ticket[i] }.reduce(:*)
+                                  .map { |i| my_ticket[i] }
+                                  .reduce(:*)
 
 puts departure_values
