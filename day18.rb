@@ -34,7 +34,7 @@ def calc_eval(expression, same_precendence = true)
         op_scanned = true
       when '*'
         stack.push token
-        
+
         if !same_precendence
           # Just implicitly put right parenthesis around the rest
           # of the expression and go from there.
