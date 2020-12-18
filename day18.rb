@@ -28,16 +28,31 @@ def calc_eval(expression, same_precendence = true)
         stack.push calc.call if op_scanned
 
         op_scanned = false
-      when '+', '*'
+      when '+'
         stack.push token
 
         op_scanned = true
+      when '*'
+        stack.push token
+        
+        if !same_precendence
+          # Just implicitly put right parenthesis around the rest
+          # of the expression and go from there.
+          sub_expr, offset = eval_rec.call(expr, offset + 1, level + 1)
+
+          stack.push sub_expr
+          stack.push calc.call
+
+          break
+        else
+          op_scanned = true
+        end
       when '('
-        sub_expr, new_offset = eval_rec.call(expr, offset + 1, level + 1)
+        sub_expr, offset = eval_rec.call(expr, offset + 1, level + 1)
+
         stack.push sub_expr
         stack.push calc.call if op_scanned
 
-        offset = new_offset
         op_scanned = false
       end
 
@@ -47,11 +62,11 @@ def calc_eval(expression, same_precendence = true)
     [stack.pop, offset]
   end
 
-  eval_rec.call(expression.chars, 0, 0)
+  eval_rec.call(expression.chars, 0, 0).first
 end
 
 # Part 1
-puts EXPRESSIONS.map { |expr_t| calc_eval(expr_t).first }.sum
+puts EXPRESSIONS.map { |expr_t| calc_eval(expr_t, true) }.sum
 
-# Part 2: Just put brackets around any pluses instead and feed it into
-#         the current evaluator.
+# Part 2
+puts EXPRESSIONS.map { |expr_t| calc_eval(expr_t, false) }.sum
