@@ -1,17 +1,5 @@
 EXPRESSIONS = File.readlines('day18_input.txt').map(&:chomp)
 
-expression_tokens = []
-
-EXPRESSIONS.each do |expr|
-  expr.gsub!('((', '( (')
-  expr.gsub!('))', ') )')
-  expr.gsub!(/\((\d)/, '( \1')
-  expr.gsub!(/(\d)\)/, '\1 )')
-
-  expression_tokens << expr.split(' ')
-end
-
-# Part 1
 def calc_eval(expression, same_precendence = true)
   stack = []
 
@@ -61,5 +49,18 @@ def calc_eval(expression, same_precendence = true)
 
   eval_rec.call(expression, 0, 0)
 end
-puts expression_tokens.map { |expr_t| calc_eval1(expr_t).first }.sum
 
+# Part 1
+expression_tokens = []
+EXPRESSIONS.each do |expr|
+  expr.gsub!('((', '( (')
+  expr.gsub!('))', ') )')
+  expr.gsub!(/\((\d)/, '( \1')
+  expr.gsub!(/(\d)\)/, '\1 )')
+
+  expression_tokens << expr.split(' ')
+end
+puts expression_tokens.map { |expr_t| calc_eval(expr_t).first }.sum
+
+# Part 2: Just put brackets around any pluses instead and feed it into
+#         the current evaluator.
