@@ -2,51 +2,45 @@ RULES_AND_MESSAGES = File.read('day19_input.txt').split("\n\n")
 RULES = RULES_AND_MESSAGES[0].split("\n")
 MESSAGES = RULES_AND_MESSAGES[1].split("\n")
 
-# puts RULES.to_s
-# puts MESSAGES.to_s
-
 rule_tree = {}
 RULES.each do |r|
   matches = r.match(/(\d+): (.+)/)
-# puts "1: #{matches[1]}, 2: #{matches[2]}"
 
-  parent = matches[1].to_i
+  parent = matches[1]
   rule_tree[parent] = []
 
   child_groups = matches[2].split('|').map { |g| g.strip.tr('"', '') }
-  child_groups.each { |g| rule_tree[parent] << g.split(' ').map { |c| c =~ /\d+/ ? c.to_i : c } }
+  child_groups.each { |g| rule_tree[parent] << g.split(' ').map { |c| c } }
 end
 
-puts rule_tree.to_s
-
+# Part 1
 def derive_messages(tree, start)
   cache = {}
 
   derive_messages_rec = lambda do |rule|
-    puts "Starting Rule #{rule}"
-    unless cache[rule].nil?
-      puts "Rule: #{rule}, Cache: #{cache[rule]}"
-      return cache[rule]
-    end
-
-    if tree[rule].first.first =~ /[ab]/
-      puts "Rule: #{rule}, Base: #{[tree[rule].first.first]}"
-      return cache[rule] = [tree[rule].first.first]
-    end
+    return cache[rule] unless cache[rule].nil?
+    return cache[rule] = [tree[rule].first.first] if tree[rule].first.first =~ /[ab]\*?/
 
     messages = []
-    puts "Child rules: #{tree[rule]}"
+    # puts "Child rules: #{tree[rule]}"
     tree[rule].each do |g|
-      messages << g.map { |n| derive_messages_rec.call(n) }.reduce(:product).map(&:join)
+      messages << g.map { |n| derive_messages_rec.call(n) }
+                   .reduce(:product)
+                   .map { |m| m.is_a?(Array) ? m.join : m }
     end
 
-    puts "Rule: #{rule}, Messages: #{messages}"
+    # puts "Rule: #{rule}, Messages: #{messages}"
     cache[rule] = messages.reduce(:|)
   end
 
   derive_messages_rec.call(start)
 end
+possible_messages = derive_messages(rule_tree, '0').sort!
+puts MESSAGES.reject { |m| possible_messages.bsearch { |s| m <=> s }.nil? }.size
 
-possible_messages = derive_messages(rule_tree, 0)
-puts possible_messages.to_s
-puts MESSAGES.select { |m| possible_messages.include?(m) }.size
+# Part 2
+rule_tree['8'] = [['42', '8*']]
+rule_tree['11'] = [['42', '11*', '31']]
+
+# ??? What do?
+
